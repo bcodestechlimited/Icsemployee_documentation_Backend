@@ -1,0 +1,24 @@
+20231205	05:00:36	27114222-b1af-4654-abb4-9d7dcbefc4cb	Error: Not allowed by CORS
+20231206	15:54:05	e5e817ef-ec5a-421e-8497-4aac61c8576b	TypeError: Cannot read properties of undefined (reading 'id')
+20231206	15:55:23	5434e0f5-9a75-460d-8cd2-a3f7cfbf2f02	TypeError: Cannot read properties of undefined (reading 'roles')
+20240215	15:02:24	35d8b6a3-28da-41a8-98ae-35d08045c48b	TypeError: Cannot read properties of undefined (reading 'id')
+20240215	15:02:50	09feeaa3-44d4-4a12-9ba7-d027b21b272b	TypeError: Cannot read properties of undefined (reading 'id')
+20240215	15:03:48	15f8a408-fd7a-4f5b-ada9-2d31ee949d99	TypeError: Cannot read properties of undefined (reading 'id')
+20240215	15:04:22	e1fa2c77-9f02-49e0-a407-e32ab2de334d	TypeError: Cannot read properties of undefined (reading 'id')
+20240215	15:05:02	2999c34d-f206-4ee9-94a0-85d3b344dcea	Error: Cannot set headers after they are sent to the client
+20240215	17:02:08	61af6c04-1e9a-4785-b986-7f64d83ecf53	SyntaxError: Unexpected token ] in JSON at position 243
+20240216	07:58:35	e1482ae2-c713-4fa8-a362-4b99274b46d3	PayloadTooLargeError: request entity too large
+20240216	08:00:57	f88081a3-6845-43d3-a41a-e3344e22cfec	PayloadTooLargeError: request entity too large
+20240216	08:21:10	0ca32062-b513-431a-bf5d-db74f97888e6	MulterError: Unexpected field
+20240216	08:23:08	e0f02d9f-23b8-4f89-b849-383432a65430	MulterError: Unexpected field
+20240216	10:14:01	c3379387-d0a1-4e5a-a7d7-0a6f7af1e9d6	MulterError: Unexpected field
+20240216	10:18:38	321b759c-0af0-4171-8af3-d4508b6c2e39	MulterError: Unexpected field
+20240216	10:20:27	27067104-c22f-416d-8439-ca4c3e54bd33	MulterError: Unexpected field
+20240216	10:40:59	402b3824-6ba1-40df-960f-c69c2506ab5a	MulterError: Unexpected field
+20240216	10:52:27	3be20ae7-9131-4dbe-b13b-6d86872c2be9	MulterError: Unexpected field
+20240222	11:56:03	277dcb47-0acd-4ecc-bf07-b957366c36dd	TypeError: req.status is not a function
+20240222	13:49:20	2acc93cb-8cb3-4356-aba3-57d4bc3667fc	ReferenceError: validationResult is not defined
+20240222	13:49:31	4fd8883a-1f41-40d8-8392-5119f248e7b1	ReferenceError: validationResult is not defined
+20240404	14:43:25	d873af32-2a5f-4092-8440-acc37818c29a	MulterError: Unexpected field
+20240408	14:48:08	d2c39966-198c-4e45-b34a-b3eb0284e5be	MulterError: Unexpected field
+20240408	14:51:06	9a49eab8-7a30-4e9e-8005-d1be0626c6a3	MulterError: Unexpected field

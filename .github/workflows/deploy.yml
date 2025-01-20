@@ -1,0 +1,52 @@
+name: Backend Deployment
+
+on:
+  push:
+    branches:
+      - main # Only trigger on pushes to the main branch
+  pull_request:
+    branches:
+      - main # Only trigger on pull requests to the main branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+      - run: npm ci --f
+
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh/
+          echo "${{ secrets.SERVER_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+
+      - name: Deploy to ics-employee
+        run: |
+          ssh -i ~/.ssh/id_rsa ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_IP }} -p ${{ secrets.SERVER_PORT }} "
+            cd ${{ secrets.PROJECT_PATH }} &&
+            git remote set-url origin ${{ secrets.REPO_URL }} &&
+            git config --global --add safe.directory ${{ secrets.PROJECT_PATH }} &&
+            git pull &&
+            npm install --f &&
+            pm2 restart ics-employee &&
+            echo 'Code Deployed Successfully!'
+          "
