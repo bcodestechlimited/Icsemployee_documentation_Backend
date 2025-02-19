@@ -13,8 +13,8 @@ const {
 const router = express.Router();
 const { check } = require("express-validator");
 
-router.route("/forget-password").get(sendOTP);
-router.route("/change-password").get(ChangePassword);
+router.route("/forget-password").post(sendOTP);
+router.route("/change-password").post(ChangePassword);
 
 router.post(
   "/register",
