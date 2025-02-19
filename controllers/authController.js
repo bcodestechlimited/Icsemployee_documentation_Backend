@@ -5,6 +5,8 @@ const hbs = require("nodemailer-express-handlebars");
 const nodemailer = require("nodemailer");
 const jwt = require("jsonwebtoken");
 const user = require("../models/user");
+const crypto = require("crypto");
+const OTP = require("../models/OTP");
 
 const registerUser = async (req, res, next) => {
   const { username, email, phone, password } = req.body;
@@ -232,7 +234,88 @@ const generateRandomNumber = () => {
     .join("");
 };
 
+// version 2
+
+const sendOTP = async (req, res, next) => {
+  const { email } = req.body;
+  const user = await User.findOne({ email });
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+
+  const otp = crypto.randomInt(100000, 999999).toString();
+  await OTP.findOneAndDelete({ email });
+  let meme = await OTP.create({ email, otp });
+  const subject = "Here is your OTP";
+  const text = `Please use this otp to reset your password. OTP: ${otp}`;
+  const info = await sendEmail({ to: email, subject, text });
+
+  res.status(201).json({
+    success: true,
+    message: `OTP has been sent to ${info.envelope.to}`,
+  });
+};
+
+const ChangePassword = async (req, res) => {
+  try {
+    const { email, otp, newPassword } = req.body;
+
+    // Check if user exists
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Check if OTP is valid
+    const validOTP = await OTP.findOne({ email, otp });
+    if (!validOTP) {
+      return res.status(400).json({ message: "Invalid or expired OTP" });
+    }
+
+    // Hash the new password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    // Update user password
+    user.password = hashedPassword;
+    await user.save();
+
+    // Delete OTP after successful reset
+    await OTP.deleteOne({ email });
+
+    return res.json({ message: "Password reset successful", user });
+  } catch (error) {
+    console.error("Reset password error:", error);
+    return res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
+const sendEmail = async ({ to, subject, text, html }) => {
+  const transporter = nodemailer.createTransport({
+    host: "smtp-relay.brevo.com",
+    port: 2525,
+    auth: {
+      user: process.env.BREVO_EMAIL,
+      pass: process.env.BREVO_PASSWORD,
+    },
+    tls: {
+      rejectUnauthorized: false,
+    },
+  });
+
+  const mailOptions = {
+    from: "admin@icsoutsourcing.com",
+    to,
+    subject,
+    text,
+    html,
+  };
+
+  return await transporter.sendMail(mailOptions);
+};
+
 module.exports = {
+  ChangePassword,
   registerUser,
   verifyEmail,
   login,
@@ -241,4 +324,5 @@ module.exports = {
   resetPassword,
   verifyPasswordReset,
   confirmPasswordReset,
+  sendOTP,
 };

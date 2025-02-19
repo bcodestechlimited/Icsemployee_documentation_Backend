@@ -7,9 +7,14 @@ const {
   resetPassword,
   verifyPasswordReset,
   confirmPasswordReset,
+  sendOTP,
+  ChangePassword,
 } = require("../../controllers/authController");
 const router = express.Router();
 const { check } = require("express-validator");
+
+router.route("/forget-password").get(sendOTP);
+router.route("/change-password").get(ChangePassword);
 
 router.post(
   "/register",
