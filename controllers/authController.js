@@ -199,7 +199,10 @@ const login = async (req, res, next) => {
     return res.status(400).json({
       data: errors.array(),
     });
-  const foundUser = await User.findOne({ email }).exec();
+  const foundUser = await User.findOne({ email: email.toLowerCase() }).exec();
+
+  console.log({ foundUser });
+
   if (!foundUser) return res.status(404).json({ message: "User not found" });
   // evaluate password
   if (!foundUser?.emailVerified)

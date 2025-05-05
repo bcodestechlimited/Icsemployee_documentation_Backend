@@ -374,25 +374,56 @@ const getGuarantorsByUserId = async (req, res) => {
   }
 };
 
+// const uploadPassport = async (req, res) => {
+//   const { id } = req;
+//   const file = req.file;
+//   if (!file) return res.status(500).json({ message: "Image was not uploaded" });
+//   try {
+//     console.log({ id });
+
+//     const profile = await PersonalInfo.findOne({ user: id }).exec();
+
+//     console.log({ profile });
+
+//     if (!profile) return res.status(401).json({ message: Unauthorized });
+
+//     await validatePassport(file.path);
+//     const { status, data, message } = await fileUploader(file.path);
+//     if (!status) return res.status(400).json({ message });
+//     profile.passport = { publicId: data.public_id, url: data.secure_url };
+//     // profile.passport = data.secure_url;
+//     await profile.save();
+//     res.status(200).json({ message: "Passport uploaded successfully" });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: error.message });
+//   }
+// };
+
 const uploadPassport = async (req, res) => {
   const { id } = req;
   const file = req.file;
-  console.log(req.file);
-  console.log({ id });
   if (!file) return res.status(500).json({ message: "Image was not uploaded" });
   try {
-    const profile = await PersonalInfo.findOne({ user: id }).exec();
-    console.log(profile);
-    if (!profile) return res.status(401).json({ message: Unauthorized });
-
     await validatePassport(file.path);
     const { status, data, message } = await fileUploader(file.path);
     if (!status) return res.status(400).json({ message });
-    console.log(data, "data");
-    profile.passport = { publicId: data.public_id, url: data.url };
-    await profile.save();
+
+    const updatedProfile = await PersonalInfo.findOneAndUpdate(
+      { user: id },
+      { passport: { publicId: data.public_id, url: data.secure_url } },
+      { new: true }
+    );
+
+    if (!updatedProfile) {
+      return res
+        .status(404)
+        .json({ message: "Profile not found or update failed" });
+    }
+
     res.status(200).json({ message: "Passport uploaded successfully" });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: error.message });
   }
 };
