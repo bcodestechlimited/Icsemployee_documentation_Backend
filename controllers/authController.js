@@ -56,15 +56,16 @@ const registerUser = async (req, res, next) => {
 const sendMail = async (email, token, template, subject) => {
   // email transporter
   let transporter = nodemailer.createTransport({
-    // host: "premium230.web-hosting.com",
-    // port: 465,
-    // secure: true, // true for 465, false for other ports
-    service: "gmail",
-    auth: {
-      user: process.env.SENDER, // generated ethereal user
-      pass: process.env.PASS, // generated ethereal password
-    },
-  });
+  host: "smtp-relay.brevo.com",
+  port: 587,
+  auth: {
+    user: env.BREVO_EMAIL,
+    pass: env.BREVO_PASSWORD,
+  },
+  tls: {
+    rejectUnauthorized: false,
+  },
+});
 
   const mailOptions = {
     from: process.env.SENDER,
