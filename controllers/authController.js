@@ -59,8 +59,8 @@ const sendMail = async (email, token, template, subject) => {
   host: "smtp-relay.brevo.com",
   port: 587,
   auth: {
-    user: env.BREVO_EMAIL,
-    pass: env.BREVO_PASSWORD,
+    user: process.env.BREVO_EMAIL,
+    pass: process.env.BREVO_PASSWORD,
   },
   tls: {
     rejectUnauthorized: false,
