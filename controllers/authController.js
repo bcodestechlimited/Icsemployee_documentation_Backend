@@ -7,6 +7,7 @@ const jwt = require("jsonwebtoken");
 const user = require("../models/user");
 const crypto = require("crypto");
 const OTP = require("../models/OTP");
+const transporter = require("../lib/transporter");
 
 const registerUser = async (req, res, next) => {
   const { username, email, phone, password } = req.body;
@@ -44,7 +45,7 @@ const registerUser = async (req, res, next) => {
       email,
       token,
       "email_template",
-      "Verify Token"
+      "Verify Token",
     );
 
     res.status(201).json({ success: `A token has been sent to your mail` });
@@ -54,45 +55,23 @@ const registerUser = async (req, res, next) => {
 };
 
 const sendMail = async (email, token, template, subject) => {
-  // email transporter
-  let transporter = nodemailer.createTransport({
-    // host: "premium230.web-hosting.com",
-    // port: 465,
-    // secure: true, // true for 465, false for other ports
-    service: "gmail",
-    auth: {
-      user: process.env.SENDER, // generated ethereal user
-      pass: process.env.PASS, // generated ethereal password
-    },
-  });
-
   const mailOptions = {
-    from: process.env.SENDER,
+    from: `"ICS Outsourcing" <${process.env.SENDER}>`,
     to: email,
     subject: subject,
     template: template,
     context: {
       token: token,
+      year: new Date().getFullYear(),
     },
   };
 
-  transporter.use(
-    "compile",
-    hbs({
-      viewEngine: {
-        extname: ".hbs",
-        layoutsDir: "templates/",
-        defaultLayout: false,
-        partialsDir: "templates/",
-      },
-      viewPath: "templates/",
-      extName: ".hbs",
-    })
-  );
   try {
     const data = await transporter.sendMail(mailOptions);
     return data;
   } catch (err) {
+    // console.log(err);
+    throw err;
     return err;
   }
 };
@@ -111,7 +90,7 @@ const resendToken = async (req, res) => {
       email,
       token,
       "email_template",
-      "Verify Token"
+      "Verify Token",
     );
     res.status(201).json({ success: `A token has been sent to your mail` });
   } catch (err) {
@@ -138,7 +117,7 @@ const resetPassword = async (req, res) => {
       id: email,
     },
     process.env.ACCESS_TOKEN_SECRET,
-    { expiresIn: "10m" }
+    { expiresIn: "10m" },
   );
   const link = `${process.env.BASE_URL}ChangePassword/${token}`;
   try {
@@ -146,7 +125,7 @@ const resetPassword = async (req, res) => {
       email,
       link,
       "change_password",
-      "Reset Password"
+      "Reset Password",
     );
     res.status(201).json({ success: `A link has been sent to your mail` });
   } catch (error) {
@@ -219,7 +198,7 @@ const login = async (req, res, next) => {
         },
       },
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "1d" }
+      { expiresIn: "1d" },
     );
     res.status(201).json({
       message: `User logged in!`,

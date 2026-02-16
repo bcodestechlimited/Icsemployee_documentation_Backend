@@ -46,7 +46,7 @@ app.use("/user/personalInfo", require("./routes/employee/personalDetails"));
 app.use("/user/employeeDetails", require("./routes/employee/employeeDetails"));
 app.use(
   "/user/educationalBackground",
-  require("./routes/employee/educationBackground")
+  require("./routes/employee/educationBackground"),
 );
 app.use("/user/certificate", require("./routes/employee/certificates"));
 app.use("/user/guarantors", require("./routes/employee/guarantors"));
@@ -68,5 +68,8 @@ app.use(errorHandler);
 
 mongoose.connection.once("open", () => {
   console.log("Connected to MongoDB");
+  console.log(`Server running on port ${PORT}`);
+  console.log(`Running in ${process.env.NODE_ENV} mode`);
+
   app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 });
