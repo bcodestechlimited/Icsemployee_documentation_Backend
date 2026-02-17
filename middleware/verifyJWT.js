@@ -3,6 +3,9 @@ const User = require("../models/user");
 
 const verifyJWT = async (req, res, next) => {
   const authHeader = req.header("Authorization") || req.header("authorization");
+
+  console.log({ authHeader });
+
   if (!authHeader?.startsWith("Bearer ")) return res.sendStatus(401);
   const token = authHeader.split(" ")[1];
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, decoded) => {
