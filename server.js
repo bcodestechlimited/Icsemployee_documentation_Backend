@@ -68,8 +68,10 @@ app.use(errorHandler);
 
 mongoose.connection.once("open", () => {
   console.log("Connected to MongoDB");
-  console.log(`Server running on port ${PORT}`);
-  console.log(`Running in ${process.env.NODE_ENV} mode`);
 
-  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  app.listen(PORT, () =>
+    console.log(
+      `Server running on port ${PORT} in ${process.env.NODE_ENV} mode`,
+    ),
+  );
 });
